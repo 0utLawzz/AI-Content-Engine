@@ -397,6 +397,138 @@ export interface ExportInput {
   platform: ExportInputPlatform;
 }
 
+export interface NormalizedScene {
+  order: number;
+  text: string;
+  voiceScript: string;
+  /** @nullable */
+  cta?: string | null;
+  duration: number;
+  /** @nullable */
+  animationPreset?: string | null;
+  /** @nullable */
+  backgroundType?: string | null;
+  /** @nullable */
+  subtitleMode?: string | null;
+  keywords?: string[];
+  /** @nullable */
+  thumbnailHint?: string | null;
+}
+
+export interface ContentPackage {
+  title: string;
+  contentType: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  theme?: string | null;
+  /** @nullable */
+  voice?: string | null;
+  /** @nullable */
+  music?: string | null;
+  /** @nullable */
+  cta?: string | null;
+  /** @nullable */
+  brand?: string | null;
+  scenes: NormalizedScene[];
+}
+
+export type ValidationIssueSeverity = typeof ValidationIssueSeverity[keyof typeof ValidationIssueSeverity];
+
+
+export const ValidationIssueSeverity = {
+  error: 'error',
+  warning: 'warning',
+  info: 'info',
+} as const;
+
+export interface ValidationIssue {
+  severity: ValidationIssueSeverity;
+  field: string;
+  message: string;
+  /** @nullable */
+  row?: number | null;
+}
+
+export type PipelineValidationResultStats = {
+  sceneCount: number;
+  estimatedDuration: number;
+  warnings: number;
+  errors: number;
+};
+
+export interface PipelineValidationResult {
+  valid: boolean;
+  issues: ValidationIssue[];
+  package: ContentPackage;
+  stats?: PipelineValidationResultStats;
+}
+
+export interface PipelineCsvImportBody {
+  /** Raw CSV text content */
+  content: string;
+  /** @nullable */
+  projectId?: number | null;
+}
+
+export interface PipelineJsonImportBody {
+  /** Raw JSON text content */
+  content: string;
+  /** @nullable */
+  projectId?: number | null;
+}
+
+export type PipelineGenerateBodyProvider = typeof PipelineGenerateBodyProvider[keyof typeof PipelineGenerateBodyProvider];
+
+
+export const PipelineGenerateBodyProvider = {
+  openai: 'openai',
+  gemini: 'gemini',
+  claude: 'claude',
+  openrouter: 'openrouter',
+  ollama: 'ollama',
+  local: 'local',
+} as const;
+
+export type PipelineGenerateBodyTone = typeof PipelineGenerateBodyTone[keyof typeof PipelineGenerateBodyTone];
+
+
+export const PipelineGenerateBodyTone = {
+  inspirational: 'inspirational',
+  educational: 'educational',
+  entertaining: 'entertaining',
+  professional: 'professional',
+  casual: 'casual',
+} as const;
+
+export interface PipelineGenerateBody {
+  provider?: PipelineGenerateBodyProvider;
+  topic: string;
+  style?: string;
+  tone?: PipelineGenerateBodyTone;
+  /**
+     * @minimum 1
+     * @maximum 20
+     */
+  count: number;
+  /** @nullable */
+  projectId?: number | null;
+  /** @nullable */
+  pluginSlug?: string | null;
+}
+
+export interface PipelineApplyBody {
+  projectId: number;
+  scenes: NormalizedScene[];
+  replaceExisting?: boolean;
+}
+
+export interface PipelineApplyResult {
+  projectId: number;
+  scenesCreated: number;
+  scenesReplaced: number;
+}
+
 export type ListProjectsParams = {
 status?: ListProjectsStatus;
 contentType?: string;

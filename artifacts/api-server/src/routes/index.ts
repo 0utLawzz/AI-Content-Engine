@@ -6,6 +6,7 @@ import { scenesRouter } from "./scenes";
 import { pluginsRouter } from "./plugins";
 import { bulkJobsRouter } from "./bulk_jobs";
 import { exportsRouter } from "./exports";
+import { pipelineRouter } from "./pipeline";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use("/projects/:id/scenes", scenesRouter);
 router.use("/plugins", pluginsRouter);
 router.use("/bulk-jobs", bulkJobsRouter);
 router.use("/exports", exportsRouter);
+router.use("/pipeline", pipelineRouter);
 
 export default router;

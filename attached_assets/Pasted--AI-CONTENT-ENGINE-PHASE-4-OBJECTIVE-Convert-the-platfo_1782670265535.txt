@@ -1,0 +1,281 @@
+# AI CONTENT ENGINE — PHASE 4
+
+## OBJECTIVE
+
+Convert the platform into a provider-independent content pipeline.
+
+The renderer should never know where content came from.
+
+All content sources must be normalized into the same internal schema before rendering.
+
+This is the permanent architecture going forward.
+
+---
+
+# CONTENT SOURCES
+
+Implement a Content Source Layer.
+
+Supported sources:
+
+1. CSV Import
+2. JSON Import
+3. Manual Editor
+4. REST API
+5. AI Providers
+6. Database
+
+Every source must output the exact same internal data model.
+
+---
+
+# CONTENT ADAPTERS
+
+Create adapters for every source.
+
+CSV Adapter
+
+JSON Adapter
+
+REST Adapter
+
+AI Adapter
+
+Database Adapter
+
+Adapters are responsible for transforming external data into the engine schema.
+
+No renderer logic inside adapters.
+
+---
+
+# INTERNAL CONTENT SCHEMA
+
+All adapters must output a common structure.
+
+Example:
+
+Project
+
+Metadata
+
+Scenes
+
+Narration
+
+Captions
+
+Keywords
+
+Thumbnail
+
+CTA
+
+Brand
+
+Timeline
+
+Renderer should consume ONLY this schema.
+
+Never consume provider-specific responses.
+
+---
+
+# CSV IMPORTER
+
+Allow users to upload CSV files.
+
+Example columns:
+
+Title
+
+Category
+
+Hook
+
+Main
+
+Ending
+
+Author
+
+Theme
+
+Voice
+
+Music
+
+CTA
+
+Brand
+
+Duration
+
+Validate the CSV.
+
+Highlight invalid rows.
+
+Preview before import.
+
+Support bulk import.
+
+---
+
+# JSON IMPORTER
+
+Accept JSON matching the internal schema.
+
+Validate automatically.
+
+Display readable validation errors.
+
+Allow drag-and-drop upload.
+
+---
+
+# MANUAL EDITOR
+
+Provide a visual editor.
+
+Users should be able to create content manually without using AI.
+
+Everything editable:
+
+Scenes
+
+Voice
+
+Music
+
+Timing
+
+CTA
+
+Thumbnail
+
+Theme
+
+Brand
+
+---
+
+# AI PROVIDERS
+
+AI should become just another content source.
+
+Never special-case AI.
+
+Supported:
+
+OpenAI
+
+Gemini
+
+Claude
+
+OpenRouter
+
+Ollama
+
+Future providers
+
+All providers implement the same interface.
+
+---
+
+# VALIDATION LAYER
+
+Validate every imported project.
+
+Check:
+
+Missing scenes
+
+Missing narration
+
+Invalid duration
+
+Invalid theme
+
+Invalid timeline
+
+Broken JSON
+
+Invalid CSV
+
+Repair where possible.
+
+---
+
+# PREVIEW
+
+Before rendering,
+
+display:
+
+Project summary
+
+Scene list
+
+Timeline
+
+Voice
+
+Thumbnail
+
+Theme
+
+Estimated duration
+
+Warnings
+
+---
+
+# BULK MODE
+
+Users can import:
+
+100 CSV rows
+
+↓
+
+100 validated projects
+
+↓
+
+100 render jobs
+
+↓
+
+100 exports
+
+No manual interaction required.
+
+---
+
+# FUTURE EXTENSIBILITY
+
+Adding a new content source should require only:
+
+1. Create Adapter
+2. Register Adapter
+
+No renderer modifications.
+
+No timeline modifications.
+
+No export modifications.
+
+The platform should remain source-agnostic forever.
+
+---
+
+# DESIGN PRINCIPLE
+
+The renderer is a consumer.
+
+The adapters are translators.
+
+The content engine is the orchestrator.
+
+Never mix responsibilities.

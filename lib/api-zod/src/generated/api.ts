@@ -550,3 +550,248 @@ export const GetExportResponse = zod.object({
 })
 
 
+/**
+ * @summary Parse and validate a CSV content import
+ */
+export const PipelineImportCsvBody = zod.object({
+  "content": zod.string().describe('Raw CSV text content'),
+  "projectId": zod.number().nullish()
+})
+
+export const PipelineImportCsvResponse = zod.object({
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.object({
+  "severity": zod.enum(['error', 'warning', 'info']),
+  "field": zod.string(),
+  "message": zod.string(),
+  "row": zod.number().nullish()
+})),
+  "package": zod.object({
+  "title": zod.string(),
+  "contentType": zod.string(),
+  "description": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "voice": zod.string().nullish(),
+  "music": zod.string().nullish(),
+  "cta": zod.string().nullish(),
+  "brand": zod.string().nullish(),
+  "scenes": zod.array(zod.object({
+  "order": zod.number(),
+  "text": zod.string(),
+  "voiceScript": zod.string(),
+  "cta": zod.string().nullish(),
+  "duration": zod.number(),
+  "animationPreset": zod.string().nullish(),
+  "backgroundType": zod.string().nullish(),
+  "subtitleMode": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "thumbnailHint": zod.string().nullish()
+}))
+}),
+  "stats": zod.object({
+  "sceneCount": zod.number(),
+  "estimatedDuration": zod.number(),
+  "warnings": zod.number(),
+  "errors": zod.number()
+}).optional()
+})
+
+
+/**
+ * @summary Parse and validate a JSON content import
+ */
+export const PipelineImportJsonBody = zod.object({
+  "content": zod.string().describe('Raw JSON text content'),
+  "projectId": zod.number().nullish()
+})
+
+export const PipelineImportJsonResponse = zod.object({
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.object({
+  "severity": zod.enum(['error', 'warning', 'info']),
+  "field": zod.string(),
+  "message": zod.string(),
+  "row": zod.number().nullish()
+})),
+  "package": zod.object({
+  "title": zod.string(),
+  "contentType": zod.string(),
+  "description": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "voice": zod.string().nullish(),
+  "music": zod.string().nullish(),
+  "cta": zod.string().nullish(),
+  "brand": zod.string().nullish(),
+  "scenes": zod.array(zod.object({
+  "order": zod.number(),
+  "text": zod.string(),
+  "voiceScript": zod.string(),
+  "cta": zod.string().nullish(),
+  "duration": zod.number(),
+  "animationPreset": zod.string().nullish(),
+  "backgroundType": zod.string().nullish(),
+  "subtitleMode": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "thumbnailHint": zod.string().nullish()
+}))
+}),
+  "stats": zod.object({
+  "sceneCount": zod.number(),
+  "estimatedDuration": zod.number(),
+  "warnings": zod.number(),
+  "errors": zod.number()
+}).optional()
+})
+
+
+/**
+ * @summary Generate content via AI provider or local engine
+ */
+export const pipelineGenerateBodyProviderDefault = `local`;
+export const pipelineGenerateBodyCountMax = 20;
+
+
+
+export const PipelineGenerateBody = zod.object({
+  "provider": zod.enum(['openai', 'gemini', 'claude', 'openrouter', 'ollama', 'local']).default(pipelineGenerateBodyProviderDefault),
+  "topic": zod.string(),
+  "style": zod.string().optional(),
+  "tone": zod.enum(['inspirational', 'educational', 'entertaining', 'professional', 'casual']).optional(),
+  "count": zod.number().min(1).max(pipelineGenerateBodyCountMax),
+  "projectId": zod.number().nullish(),
+  "pluginSlug": zod.string().nullish()
+})
+
+export const PipelineGenerateResponse = zod.object({
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.object({
+  "severity": zod.enum(['error', 'warning', 'info']),
+  "field": zod.string(),
+  "message": zod.string(),
+  "row": zod.number().nullish()
+})),
+  "package": zod.object({
+  "title": zod.string(),
+  "contentType": zod.string(),
+  "description": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "voice": zod.string().nullish(),
+  "music": zod.string().nullish(),
+  "cta": zod.string().nullish(),
+  "brand": zod.string().nullish(),
+  "scenes": zod.array(zod.object({
+  "order": zod.number(),
+  "text": zod.string(),
+  "voiceScript": zod.string(),
+  "cta": zod.string().nullish(),
+  "duration": zod.number(),
+  "animationPreset": zod.string().nullish(),
+  "backgroundType": zod.string().nullish(),
+  "subtitleMode": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "thumbnailHint": zod.string().nullish()
+}))
+}),
+  "stats": zod.object({
+  "sceneCount": zod.number(),
+  "estimatedDuration": zod.number(),
+  "warnings": zod.number(),
+  "errors": zod.number()
+}).optional()
+})
+
+
+/**
+ * @summary Validate a content package
+ */
+export const PipelineValidateBody = zod.object({
+  "title": zod.string(),
+  "contentType": zod.string(),
+  "description": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "voice": zod.string().nullish(),
+  "music": zod.string().nullish(),
+  "cta": zod.string().nullish(),
+  "brand": zod.string().nullish(),
+  "scenes": zod.array(zod.object({
+  "order": zod.number(),
+  "text": zod.string(),
+  "voiceScript": zod.string(),
+  "cta": zod.string().nullish(),
+  "duration": zod.number(),
+  "animationPreset": zod.string().nullish(),
+  "backgroundType": zod.string().nullish(),
+  "subtitleMode": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "thumbnailHint": zod.string().nullish()
+}))
+})
+
+export const PipelineValidateResponse = zod.object({
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.object({
+  "severity": zod.enum(['error', 'warning', 'info']),
+  "field": zod.string(),
+  "message": zod.string(),
+  "row": zod.number().nullish()
+})),
+  "package": zod.object({
+  "title": zod.string(),
+  "contentType": zod.string(),
+  "description": zod.string().nullish(),
+  "theme": zod.string().nullish(),
+  "voice": zod.string().nullish(),
+  "music": zod.string().nullish(),
+  "cta": zod.string().nullish(),
+  "brand": zod.string().nullish(),
+  "scenes": zod.array(zod.object({
+  "order": zod.number(),
+  "text": zod.string(),
+  "voiceScript": zod.string(),
+  "cta": zod.string().nullish(),
+  "duration": zod.number(),
+  "animationPreset": zod.string().nullish(),
+  "backgroundType": zod.string().nullish(),
+  "subtitleMode": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "thumbnailHint": zod.string().nullish()
+}))
+}),
+  "stats": zod.object({
+  "sceneCount": zod.number(),
+  "estimatedDuration": zod.number(),
+  "warnings": zod.number(),
+  "errors": zod.number()
+}).optional()
+})
+
+
+/**
+ * @summary Apply a validated content package to a project
+ */
+export const pipelineApplyBodyReplaceExistingDefault = true;
+
+export const PipelineApplyBody = zod.object({
+  "projectId": zod.number(),
+  "scenes": zod.array(zod.object({
+  "order": zod.number(),
+  "text": zod.string(),
+  "voiceScript": zod.string(),
+  "cta": zod.string().nullish(),
+  "duration": zod.number(),
+  "animationPreset": zod.string().nullish(),
+  "backgroundType": zod.string().nullish(),
+  "subtitleMode": zod.string().nullish(),
+  "keywords": zod.array(zod.string()).optional(),
+  "thumbnailHint": zod.string().nullish()
+})),
+  "replaceExisting": zod.boolean().default(pipelineApplyBodyReplaceExistingDefault)
+})
+
+export const PipelineApplyResponse = zod.object({
+  "projectId": zod.number(),
+  "scenesCreated": zod.number(),
+  "scenesReplaced": zod.number()
+})
+
+

@@ -22,11 +22,18 @@ import type {
 import type {
   BulkJob,
   BulkJobInput,
+  ContentPackage,
   ErrorResponse,
   Export,
   ExportInput,
   HealthStatus,
   ListProjectsParams,
+  PipelineApplyBody,
+  PipelineApplyResult,
+  PipelineCsvImportBody,
+  PipelineGenerateBody,
+  PipelineJsonImportBody,
+  PipelineValidationResult,
   Plugin,
   PluginCategory,
   Project,
@@ -1714,4 +1721,354 @@ export function useGetExport<TData = Awaited<ReturnType<typeof getExport>>, TErr
 
 
 
+
+export const getPipelineImportCsvUrl = () => {
+
+
+
+
+  return `/api/pipeline/import/csv`
+}
+
+/**
+ * @summary Parse and validate a CSV content import
+ */
+export const pipelineImportCsv = async (pipelineCsvImportBody: PipelineCsvImportBody, options?: RequestInit): Promise<PipelineValidationResult> => {
+
+  return customFetch<PipelineValidationResult>(getPipelineImportCsvUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pipelineCsvImportBody)
+  }
+);}
+
+
+
+
+export const getPipelineImportCsvMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineImportCsv>>, TError,{data: BodyType<PipelineCsvImportBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pipelineImportCsv>>, TError,{data: BodyType<PipelineCsvImportBody>}, TContext> => {
+
+const mutationKey = ['pipelineImportCsv'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pipelineImportCsv>>, {data: BodyType<PipelineCsvImportBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pipelineImportCsv(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PipelineImportCsvMutationResult = NonNullable<Awaited<ReturnType<typeof pipelineImportCsv>>>
+    export type PipelineImportCsvMutationBody = BodyType<PipelineCsvImportBody>
+    export type PipelineImportCsvMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Parse and validate a CSV content import
+ */
+export const usePipelineImportCsv = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineImportCsv>>, TError,{data: BodyType<PipelineCsvImportBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof pipelineImportCsv>>,
+        TError,
+        {data: BodyType<PipelineCsvImportBody>},
+        TContext
+      > => {
+      return useMutation(getPipelineImportCsvMutationOptions(options));
+    }
+
+export const getPipelineImportJsonUrl = () => {
+
+
+
+
+  return `/api/pipeline/import/json`
+}
+
+/**
+ * @summary Parse and validate a JSON content import
+ */
+export const pipelineImportJson = async (pipelineJsonImportBody: PipelineJsonImportBody, options?: RequestInit): Promise<PipelineValidationResult> => {
+
+  return customFetch<PipelineValidationResult>(getPipelineImportJsonUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pipelineJsonImportBody)
+  }
+);}
+
+
+
+
+export const getPipelineImportJsonMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineImportJson>>, TError,{data: BodyType<PipelineJsonImportBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pipelineImportJson>>, TError,{data: BodyType<PipelineJsonImportBody>}, TContext> => {
+
+const mutationKey = ['pipelineImportJson'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pipelineImportJson>>, {data: BodyType<PipelineJsonImportBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pipelineImportJson(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PipelineImportJsonMutationResult = NonNullable<Awaited<ReturnType<typeof pipelineImportJson>>>
+    export type PipelineImportJsonMutationBody = BodyType<PipelineJsonImportBody>
+    export type PipelineImportJsonMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Parse and validate a JSON content import
+ */
+export const usePipelineImportJson = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineImportJson>>, TError,{data: BodyType<PipelineJsonImportBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof pipelineImportJson>>,
+        TError,
+        {data: BodyType<PipelineJsonImportBody>},
+        TContext
+      > => {
+      return useMutation(getPipelineImportJsonMutationOptions(options));
+    }
+
+export const getPipelineGenerateUrl = () => {
+
+
+
+
+  return `/api/pipeline/generate`
+}
+
+/**
+ * @summary Generate content via AI provider or local engine
+ */
+export const pipelineGenerate = async (pipelineGenerateBody: PipelineGenerateBody, options?: RequestInit): Promise<PipelineValidationResult> => {
+
+  return customFetch<PipelineValidationResult>(getPipelineGenerateUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pipelineGenerateBody)
+  }
+);}
+
+
+
+
+export const getPipelineGenerateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineGenerate>>, TError,{data: BodyType<PipelineGenerateBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pipelineGenerate>>, TError,{data: BodyType<PipelineGenerateBody>}, TContext> => {
+
+const mutationKey = ['pipelineGenerate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pipelineGenerate>>, {data: BodyType<PipelineGenerateBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pipelineGenerate(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PipelineGenerateMutationResult = NonNullable<Awaited<ReturnType<typeof pipelineGenerate>>>
+    export type PipelineGenerateMutationBody = BodyType<PipelineGenerateBody>
+    export type PipelineGenerateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Generate content via AI provider or local engine
+ */
+export const usePipelineGenerate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineGenerate>>, TError,{data: BodyType<PipelineGenerateBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof pipelineGenerate>>,
+        TError,
+        {data: BodyType<PipelineGenerateBody>},
+        TContext
+      > => {
+      return useMutation(getPipelineGenerateMutationOptions(options));
+    }
+
+export const getPipelineValidateUrl = () => {
+
+
+
+
+  return `/api/pipeline/validate`
+}
+
+/**
+ * @summary Validate a content package
+ */
+export const pipelineValidate = async (contentPackage: ContentPackage, options?: RequestInit): Promise<PipelineValidationResult> => {
+
+  return customFetch<PipelineValidationResult>(getPipelineValidateUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(contentPackage)
+  }
+);}
+
+
+
+
+export const getPipelineValidateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineValidate>>, TError,{data: BodyType<ContentPackage>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pipelineValidate>>, TError,{data: BodyType<ContentPackage>}, TContext> => {
+
+const mutationKey = ['pipelineValidate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pipelineValidate>>, {data: BodyType<ContentPackage>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pipelineValidate(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PipelineValidateMutationResult = NonNullable<Awaited<ReturnType<typeof pipelineValidate>>>
+    export type PipelineValidateMutationBody = BodyType<ContentPackage>
+    export type PipelineValidateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Validate a content package
+ */
+export const usePipelineValidate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineValidate>>, TError,{data: BodyType<ContentPackage>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof pipelineValidate>>,
+        TError,
+        {data: BodyType<ContentPackage>},
+        TContext
+      > => {
+      return useMutation(getPipelineValidateMutationOptions(options));
+    }
+
+export const getPipelineApplyUrl = () => {
+
+
+
+
+  return `/api/pipeline/apply`
+}
+
+/**
+ * @summary Apply a validated content package to a project
+ */
+export const pipelineApply = async (pipelineApplyBody: PipelineApplyBody, options?: RequestInit): Promise<PipelineApplyResult> => {
+
+  return customFetch<PipelineApplyResult>(getPipelineApplyUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(pipelineApplyBody)
+  }
+);}
+
+
+
+
+export const getPipelineApplyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineApply>>, TError,{data: BodyType<PipelineApplyBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pipelineApply>>, TError,{data: BodyType<PipelineApplyBody>}, TContext> => {
+
+const mutationKey = ['pipelineApply'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pipelineApply>>, {data: BodyType<PipelineApplyBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pipelineApply(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PipelineApplyMutationResult = NonNullable<Awaited<ReturnType<typeof pipelineApply>>>
+    export type PipelineApplyMutationBody = BodyType<PipelineApplyBody>
+    export type PipelineApplyMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Apply a validated content package to a project
+ */
+export const usePipelineApply = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pipelineApply>>, TError,{data: BodyType<PipelineApplyBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof pipelineApply>>,
+        TError,
+        {data: BodyType<PipelineApplyBody>},
+        TContext
+      > => {
+      return useMutation(getPipelineApplyMutationOptions(options));
+    }
 

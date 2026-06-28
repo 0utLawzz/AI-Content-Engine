@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: projects
     description: Project management
+  - name: pipeline
+    description: Content pipeline — import, generate, validate, apply
   - name: plugins
     description: Content plugins
   - name: configurations
@@ -432,6 +434,101 @@ paths:
               schema:
                 $ref: "#/components/schemas/Export"
 
+  /pipeline/import/csv:
+    post:
+      operationId: pipelineImportCsv
+      tags: [pipeline]
+      summary: Parse and validate a CSV content import
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PipelineCsvImportBody"
+      responses:
+        "200":
+          description: Parsed and validated content package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineValidationResult"
+
+  /pipeline/import/json:
+    post:
+      operationId: pipelineImportJson
+      tags: [pipeline]
+      summary: Parse and validate a JSON content import
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PipelineJsonImportBody"
+      responses:
+        "200":
+          description: Parsed and validated content package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineValidationResult"
+
+  /pipeline/generate:
+    post:
+      operationId: pipelineGenerate
+      tags: [pipeline]
+      summary: Generate content via AI provider or local engine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PipelineGenerateBody"
+      responses:
+        "200":
+          description: Generated and validated content package
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineValidationResult"
+
+  /pipeline/validate:
+    post:
+      operationId: pipelineValidate
+      tags: [pipeline]
+      summary: Validate a content package
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContentPackage"
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineValidationResult"
+
+  /pipeline/apply:
+    post:
+      operationId: pipelineApply
+      tags: [pipeline]
+      summary: Apply a validated content package to a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PipelineApplyBody"
+      responses:
+        "200":
+          description: Apply result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineApplyResult"
+
 components:
   schemas:
     HealthStatus:
@@ -780,3 +877,163 @@ components:
         platform:
           type: string
           enum: [instagram_reels, youtube_shorts, tiktok, facebook_reels, landscape, square]
+
+    NormalizedScene:
+      type: object
+      required: [order, text, voiceScript, duration]
+      properties:
+        order:
+          type: integer
+        text:
+          type: string
+        voiceScript:
+          type: string
+        cta:
+          type: ["string", "null"]
+        duration:
+          type: number
+        animationPreset:
+          type: ["string", "null"]
+        backgroundType:
+          type: ["string", "null"]
+        subtitleMode:
+          type: ["string", "null"]
+        keywords:
+          type: array
+          items:
+            type: string
+        thumbnailHint:
+          type: ["string", "null"]
+
+    ContentPackage:
+      type: object
+      required: [title, contentType, scenes]
+      properties:
+        title:
+          type: string
+        contentType:
+          type: string
+        description:
+          type: ["string", "null"]
+        theme:
+          type: ["string", "null"]
+        voice:
+          type: ["string", "null"]
+        music:
+          type: ["string", "null"]
+        cta:
+          type: ["string", "null"]
+        brand:
+          type: ["string", "null"]
+        scenes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NormalizedScene"
+
+    ValidationIssue:
+      type: object
+      required: [severity, field, message]
+      properties:
+        severity:
+          type: string
+          enum: [error, warning, info]
+        field:
+          type: string
+        message:
+          type: string
+        row:
+          type: ["integer", "null"]
+
+    PipelineValidationResult:
+      type: object
+      required: [valid, issues, package]
+      properties:
+        valid:
+          type: boolean
+        issues:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValidationIssue"
+        package:
+          $ref: "#/components/schemas/ContentPackage"
+        stats:
+          type: object
+          properties:
+            sceneCount:
+              type: integer
+            estimatedDuration:
+              type: number
+            warnings:
+              type: integer
+            errors:
+              type: integer
+          required: [sceneCount, estimatedDuration, warnings, errors]
+
+    PipelineCsvImportBody:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          description: Raw CSV text content
+        projectId:
+          type: ["integer", "null"]
+
+    PipelineJsonImportBody:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          description: Raw JSON text content
+        projectId:
+          type: ["integer", "null"]
+
+    PipelineGenerateBody:
+      type: object
+      required: [topic, count]
+      properties:
+        provider:
+          type: string
+          enum: [openai, gemini, claude, openrouter, ollama, local]
+          default: local
+        topic:
+          type: string
+        style:
+          type: string
+        tone:
+          type: string
+          enum: [inspirational, educational, entertaining, professional, casual]
+        count:
+          type: integer
+          minimum: 1
+          maximum: 20
+        projectId:
+          type: ["integer", "null"]
+        pluginSlug:
+          type: ["string", "null"]
+
+    PipelineApplyBody:
+      type: object
+      required: [projectId, scenes]
+      properties:
+        projectId:
+          type: integer
+        scenes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NormalizedScene"
+        replaceExisting:
+          type: boolean
+          default: true
+
+    PipelineApplyResult:
+      type: object
+      required: [projectId, scenesCreated, scenesReplaced]
+      properties:
+        projectId:
+          type: integer
+        scenesCreated:
+          type: integer
+        scenesReplaced:
+          type: integer
