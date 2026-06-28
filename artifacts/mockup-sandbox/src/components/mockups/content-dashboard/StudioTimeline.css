@@ -1,0 +1,52 @@
+.studio-timeline {
+  --bg-dark: #0d0d0f;
+  --bg-panel: #161619;
+  --bg-rail: #0a0a0c;
+  --border-subtle: #27272a;
+  
+  --accent-amber: #fbbf24;
+  --accent-blue: #60a5fa;
+  --accent-green: #34d399;
+  --text-muted: #8b8b93;
+}
+
+@keyframes pulse-amber {
+  0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+  70% { box-shadow: 0 0 0 4px rgba(251, 191, 36, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.timeline-clip-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.03) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+}
+
+.render-progress-stripes {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: move-stripes 1s linear infinite;
+}
+
+@keyframes move-stripes {
+  from { background-position: 1rem 0; }
+  to { background-position: 0 0; }
+}
