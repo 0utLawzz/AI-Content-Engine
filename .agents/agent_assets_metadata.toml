@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "vjyaachMxEF-ODyQX1UzJ"
+uri = "file://social-preview.svg"
+type = "image"
+title = "GitHub Social Preview (1280×640)"

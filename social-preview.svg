@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#0f0a1a"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1030;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#120d20;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="24" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- Ambient glow blobs -->
+  <ellipse cx="200" cy="200" rx="300" ry="200" fill="#7c3aed" opacity="0.08"/>
+  <ellipse cx="1100" cy="450" rx="250" ry="180" fill="#a855f7" opacity="0.07"/>
+  <ellipse cx="640" cy="320" rx="400" ry="250" fill="#6d28d9" opacity="0.04"/>
+
+  <!-- Safe area border guide (invisible — just for reference) -->
+  <!-- 40pt safe area: rect at 40,40 to 1240,600 -->
+
+  <!-- Top accent bar -->
+  <rect x="40" y="40" width="200" height="3" rx="2" fill="url(#accentGrad)"/>
+
+  <!-- Bottom accent bar -->
+  <rect x="1040" y="597" width="200" height="3" rx="2" fill="url(#accentGrad)"/>
+
+  <!-- Corner decorations -->
+  <rect x="40" y="40" width="3" height="60" rx="1.5" fill="#7c3aed" opacity="0.6"/>
+  <rect x="1237" y="40" width="3" height="60" rx="1.5" fill="#7c3aed" opacity="0.6"/>
+  <rect x="40" y="537" width="3" height="60" rx="1.5" fill="#7c3aed" opacity="0.6"/>
+  <rect x="1237" y="537" width="3" height="60" rx="1.5" fill="#7c3aed" opacity="0.6"/>
+
+  <!-- Plugin cards — left decorative stack -->
+  <rect x="60" y="180" width="180" height="80" rx="10" fill="url(#cardGrad)" stroke="#2d1f4e" stroke-width="1"/>
+  <rect x="60" y="180" width="3" height="80" rx="1.5" fill="#7c3aed"/>
+  <text x="78" y="209" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#a78bfa">QUOTES</text>
+  <text x="78" y="228" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#e2d9f3">Motivational Quotes</text>
+  <text x="78" y="246" font-family="system-ui,sans-serif" font-size="11" fill="#6b5a8e">14 scenes generated</text>
+
+  <rect x="60" y="276" width="180" height="80" rx="10" fill="url(#cardGrad)" stroke="#2d1f4e" stroke-width="1" opacity="0.7"/>
+  <rect x="60" y="276" width="3" height="80" rx="1.5" fill="#a855f7"/>
+  <text x="78" y="305" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#a78bfa">SCIENCE</text>
+  <text x="78" y="324" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#e2d9f3">Science Facts</text>
+  <text x="78" y="342" font-family="system-ui,sans-serif" font-size="11" fill="#6b5a8e">12 scenes generated</text>
+
+  <rect x="60" y="372" width="180" height="80" rx="10" fill="url(#cardGrad)" stroke="#2d1f4e" stroke-width="1" opacity="0.4"/>
+  <rect x="60" y="372" width="3" height="80" rx="1.5" fill="#6d28d9"/>
+  <text x="78" y="401" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#a78bfa">BUSINESS</text>
+  <text x="78" y="420" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#e2d9f3">Business Tips</text>
+  <text x="78" y="438" font-family="system-ui,sans-serif" font-size="11" fill="#6b5a8e">8 scenes generated</text>
+
+  <!-- Main content — centered -->
+  <!-- Logo mark -->
+  <rect x="488" y="165" width="44" height="44" rx="10" fill="url(#accentGrad)" filter="url(#glow)"/>
+  <!-- Play icon inside logo -->
+  <polygon points="503,180 503,197 520,188.5" fill="white"/>
+
+  <!-- App name -->
+  <text x="544" y="198" font-family="system-ui,-apple-system,sans-serif" font-size="26" font-weight="700" fill="#ffffff" letter-spacing="-0.5">AI Content Engine</text>
+
+  <!-- Divider line -->
+  <rect x="488" y="224" width="304" height="1" fill="#2d1f4e"/>
+
+  <!-- Headline -->
+  <text x="640" y="290" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="800" fill="#ffffff" letter-spacing="-1.5" text-anchor="middle">Produce at</text>
+  <text x="640" y="352" font-family="system-ui,-apple-system,sans-serif" font-size="52" font-weight="800" fill="url(#accentGrad)" letter-spacing="-1.5" text-anchor="middle">channel scale.</text>
+
+  <!-- Description -->
+  <text x="640" y="408" font-family="system-ui,-apple-system,sans-serif" font-size="19" fill="#9d8ec2" text-anchor="middle" letter-spacing="0.1">Modular video content generation platform for creators and studios.</text>
+  <text x="640" y="434" font-family="system-ui,-apple-system,sans-serif" font-size="19" fill="#9d8ec2" text-anchor="middle" letter-spacing="0.1">14 content plugins. Unlimited formats. One unified engine.</text>
+
+  <!-- Tags row -->
+  <rect x="488" y="464" width="92" height="28" rx="14" fill="#1e1040" stroke="#4c2d8f" stroke-width="1"/>
+  <text x="534" y="483" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#a78bfa" text-anchor="middle">TypeScript</text>
+
+  <rect x="592" y="464" width="72" height="28" rx="14" fill="#1e1040" stroke="#4c2d8f" stroke-width="1"/>
+  <text x="628" y="483" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#a78bfa" text-anchor="middle">React</text>
+
+  <rect x="676" y="464" width="68" height="28" rx="14" fill="#1e1040" stroke="#4c2d8f" stroke-width="1"/>
+  <text x="710" y="483" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#a78bfa" text-anchor="middle">Express</text>
+
+  <rect x="756" y="464" width="76" height="28" rx="14" fill="#1e1040" stroke="#4c2d8f" stroke-width="1"/>
+  <text x="794" y="483" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#a78bfa" text-anchor="middle">Postgres</text>
+
+  <!-- Right decorative — export/stats panel -->
+  <rect x="1040" y="180" width="196" height="130" rx="12" fill="url(#cardGrad)" stroke="#2d1f4e" stroke-width="1"/>
+  <text x="1060" y="208" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#6b5a8e" letter-spacing="1">EXPORT TARGETS</text>
+  <!-- Platform rows -->
+  <rect x="1060" y="218" width="120" height="8" rx="4" fill="#7c3aed" opacity="0.9"/>
+  <text x="1186" y="226" font-family="system-ui,sans-serif" font-size="10" fill="#a78bfa" text-anchor="end">Instagram</text>
+  <rect x="1060" y="236" width="94" height="8" rx="4" fill="#6d28d9" opacity="0.8"/>
+  <text x="1186" y="244" font-family="system-ui,sans-serif" font-size="10" fill="#a78bfa" text-anchor="end">TikTok</text>
+  <rect x="1060" y="254" width="108" height="8" rx="4" fill="#5b21b6" opacity="0.7"/>
+  <text x="1186" y="262" font-family="system-ui,sans-serif" font-size="10" fill="#a78bfa" text-anchor="end">YouTube</text>
+  <rect x="1060" y="272" width="80" height="8" rx="4" fill="#4c1d95" opacity="0.6"/>
+  <text x="1186" y="280" font-family="system-ui,sans-serif" font-size="10" fill="#a78bfa" text-anchor="end">Facebook</text>
+  <!-- divider -->
+  <rect x="1060" y="296" width="156" height="1" fill="#2d1f4e"/>
+  <text x="1060" y="314" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#ffffff">100x</text>
+  <text x="1138" y="314" font-family="system-ui,sans-serif" font-size="12" fill="#6b5a8e">faster output</text>
+
+  <!-- Bottom stat cards -->
+  <rect x="1040" y="328" width="92" height="60" rx="10" fill="url(#cardGrad)" stroke="#2d1f4e" stroke-width="1"/>
+  <text x="1086" y="356" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#a78bfa" text-anchor="middle">14</text>
+  <text x="1086" y="374" font-family="system-ui,sans-serif" font-size="10" fill="#6b5a8e" text-anchor="middle">Plugins</text>
+
+  <rect x="1144" y="328" width="92" height="60" rx="10" fill="url(#cardGrad)" stroke="#2d1f4e" stroke-width="1"/>
+  <text x="1190" y="356" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#a78bfa" text-anchor="middle">9</text>
+  <text x="1190" y="374" font-family="system-ui,sans-serif" font-size="10" fill="#6b5a8e" text-anchor="middle">Themes</text>
+
+  <rect x="1040" y="402" width="196" height="60" rx="10" fill="#1a0d36" stroke="#4c2d8f" stroke-width="1"/>
+  <text x="1138" y="427" font-family="system-ui,sans-serif" font-size="11" fill="#6b5a8e" text-anchor="middle">BULK GENERATOR</text>
+  <text x="1138" y="450" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#e2d9f3" text-anchor="middle">CSV / JSON / Manual</text>
+
+  <!-- Subtle grid pattern overlay -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="0.3" opacity="0.03"/>
+  </pattern>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+</svg>
