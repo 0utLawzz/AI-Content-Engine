@@ -1,0 +1,467 @@
+# AI CONTENT ENGINE v1.0
+
+## OBJECTIVE
+
+Stop thinking like a video template.
+
+Think like a reusable content generation platform.
+
+The project should support unlimited content formats using the same rendering engine.
+
+Everything must be modular, configurable, and scalable.
+
+---
+
+# CORE ARCHITECTURE
+
+Split the application into independent modules.
+
+Core Engine
+
+Content Plugins
+
+Animation Engine
+
+Voice Engine
+
+Music Engine
+
+Subtitle Engine
+
+Timeline Engine
+
+Rendering Engine
+
+Export Engine
+
+Configuration Manager
+
+Branding System
+
+No module should depend directly on another.
+
+Use interfaces.
+
+Dependency injection is preferred.
+
+---
+
+# CONTENT PLUGINS
+
+Instead of one quote template, support plugins.
+
+Example plugins:
+
+Quotes
+
+Motivational Quotes
+
+Islamic Quotes
+
+Stoic Wisdom
+
+Book Summaries
+
+Business Tips
+
+Psychology Facts
+
+Daily Habits
+
+Mini Stories
+
+Kids Stories
+
+Language Learning
+
+History Facts
+
+Science Facts
+
+Health Tips
+
+Jokes
+
+Every plugin should implement the same interface.
+
+Example:
+
+Generate Scenes
+
+Generate Timeline
+
+Generate Typography
+
+Generate Voice Script
+
+Generate CTA
+
+Generate Thumbnail Data
+
+---
+
+# CONFIGURATION
+
+Everything must come from one configuration object.
+
+Example
+
+project
+
+branding
+
+contentType
+
+theme
+
+voice
+
+music
+
+animation
+
+camera
+
+duration
+
+aspectRatio
+
+output
+
+No hardcoded values anywhere.
+
+---
+
+# VOICE ENGINE
+
+Do NOT rely only on browser TTS.
+
+Create an abstract Voice Provider system.
+
+Support:
+
+Browser TTS
+
+OpenAI TTS
+
+ElevenLabs
+
+Google Cloud TTS
+
+Azure Neural Voice
+
+Amazon Polly
+
+Future providers can be added without changing the renderer.
+
+Voice settings:
+
+Provider
+
+Voice
+
+Language
+
+Speed
+
+Pitch
+
+Emotion
+
+Volume
+
+Pause Timing
+
+Auto Breath
+
+Voice should synchronize automatically with scene timing.
+
+---
+
+# SUBTITLE ENGINE
+
+Generate subtitles automatically.
+
+Support:
+
+Sentence Mode
+
+Word Highlight Mode
+
+Karaoke Mode
+
+Animated Captions
+
+Allow different subtitle styles.
+
+---
+
+# ANIMATION ENGINE
+
+Support reusable animation presets.
+
+Examples:
+
+Luxury
+
+Modern
+
+Corporate
+
+Minimal
+
+Energetic
+
+Kids
+
+Cinematic
+
+Dark
+
+Neon
+
+Every scene should request an animation preset instead of creating custom animations.
+
+---
+
+# CAMERA ENGINE
+
+Reusable camera movements.
+
+Push In
+
+Push Out
+
+Pan Left
+
+Pan Right
+
+Orbit
+
+Parallax
+
+Zoom
+
+Shake
+
+Camera movement should be independent from content.
+
+---
+
+# MUSIC ENGINE
+
+Support multiple music providers.
+
+Background music
+
+Ambient loops
+
+Mood presets
+
+Fade in
+
+Fade out
+
+Duck under narration
+
+Auto volume balancing
+
+---
+
+# BACKGROUND ENGINE
+
+Support multiple background types.
+
+Static
+
+Gradient
+
+Particles
+
+Video
+
+Animated Shapes
+
+Glassmorphism
+
+3D Space
+
+AI Generated Background
+
+Future:
+
+Dynamic AI backgrounds.
+
+---
+
+# BRAND ENGINE
+
+One branding module.
+
+Editable:
+
+Logo
+
+Watermark
+
+End Card
+
+CTA
+
+Social Icons
+
+Website
+
+Tagline
+
+Colors
+
+---
+
+# EXPORT ENGINE
+
+Support
+
+Instagram Reels
+
+YouTube Shorts
+
+TikTok
+
+Facebook Reels
+
+Landscape
+
+Square
+
+Export presets should automatically change layout.
+
+---
+
+# BULK GENERATOR
+
+Accept:
+
+CSV
+
+JSON
+
+Google Sheets
+
+Generate hundreds of videos automatically.
+
+Example:
+
+100 Quotes
+
+↓
+
+100 Videos
+
+↓
+
+100 Thumbnails
+
+↓
+
+100 Captions
+
+↓
+
+100 Titles
+
+↓
+
+100 Hashtags
+
+↓
+
+Export Folder
+
+---
+
+# TIMELINE ENGINE
+
+Every content plugin generates scenes.
+
+Timeline engine calculates:
+
+Scene Duration
+
+Voice Timing
+
+Animation Timing
+
+Subtitle Timing
+
+Music Timing
+
+Transitions
+
+Everything stays synchronized.
+
+---
+
+# THUMBNAIL ENGINE
+
+Automatically generate thumbnail data.
+
+Headline
+
+Background
+
+Brand Colors
+
+Layout
+
+CTA
+
+Safe Areas
+
+---
+
+# PROJECT STRUCTURE
+
+/src
+
+/core
+
+/plugins
+
+/voice
+
+/music
+
+/animation
+
+/backgrounds
+
+/subtitles
+
+/timeline
+
+/export
+
+/themes
+
+/components
+
+/config
+
+/assets
+
+/utils
+
+/interfaces
+
+---
+
+# DESIGN GOAL
+
+This should NOT feel like a demo.
+
+This should feel like the foundation of a commercial AI video creation platform.
+
+Every future feature should be added as a module or plugin without rewriting existing code.
+
+Focus on maintainability, extensibility, clean architecture, and production-quality code.

@@ -3,13 +3,25 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AI Content Engine API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: projects
+    description: Project management
+  - name: plugins
+    description: Content plugins
+  - name: configurations
+    description: Project configurations
+  - name: scenes
+    description: Scene generation
+  - name: bulk-jobs
+    description: Bulk generation jobs
+  - name: exports
+    description: Export management
 paths:
   /healthz:
     get:
@@ -24,6 +36,402 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, active, archived]
+        - name: contentType
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/stats:
+    get:
+      operationId: getProjectStats
+      tags: [projects]
+      summary: Get project statistics and dashboard summary
+      responses:
+        "200":
+          description: Project statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectStats"
+
+  /projects/recent:
+    get:
+      operationId: getRecentProjects
+      tags: [projects]
+      summary: Get recently modified projects
+      responses:
+        "200":
+          description: Recent projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectUpdate"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /projects/{id}/configuration:
+    get:
+      operationId: getProjectConfiguration
+      tags: [configurations]
+      summary: Get project configuration
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectConfiguration"
+    put:
+      operationId: updateProjectConfiguration
+      tags: [configurations]
+      summary: Update project configuration
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectConfigurationInput"
+      responses:
+        "200":
+          description: Updated configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectConfiguration"
+
+  /projects/{id}/scenes:
+    get:
+      operationId: getProjectScenes
+      tags: [scenes]
+      summary: Get scenes for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Scenes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scene"
+    post:
+      operationId: generateScenes
+      tags: [scenes]
+      summary: Generate scenes for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SceneGenerateInput"
+      responses:
+        "200":
+          description: Generated scenes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scene"
+
+  /plugins:
+    get:
+      operationId: listPlugins
+      tags: [plugins]
+      summary: List all available content plugins
+      responses:
+        "200":
+          description: List of plugins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Plugin"
+
+  /plugins/categories:
+    get:
+      operationId: getPluginCategories
+      tags: [plugins]
+      summary: Get plugins grouped by category
+      responses:
+        "200":
+          description: Plugin categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PluginCategory"
+
+  /plugins/{slug}:
+    get:
+      operationId: getPlugin
+      tags: [plugins]
+      summary: Get a plugin by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Plugin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Plugin"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bulk-jobs:
+    get:
+      operationId: listBulkJobs
+      tags: [bulk-jobs]
+      summary: List bulk generation jobs
+      responses:
+        "200":
+          description: List of bulk jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BulkJob"
+    post:
+      operationId: createBulkJob
+      tags: [bulk-jobs]
+      summary: Create a new bulk generation job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkJobInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkJob"
+
+  /bulk-jobs/{id}:
+    get:
+      operationId: getBulkJob
+      tags: [bulk-jobs]
+      summary: Get a bulk job by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Bulk job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkJob"
+
+  /bulk-jobs/{id}/cancel:
+    post:
+      operationId: cancelBulkJob
+      tags: [bulk-jobs]
+      summary: Cancel a running bulk job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cancelled job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkJob"
+
+  /exports:
+    get:
+      operationId: listExports
+      tags: [exports]
+      summary: List export records
+      responses:
+        "200":
+          description: Exports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Export"
+    post:
+      operationId: createExport
+      tags: [exports]
+      summary: Create a new export
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Export"
+
+  /exports/{id}:
+    get:
+      operationId: getExport
+      tags: [exports]
+      summary: Get export by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Export
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Export"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +442,341 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Project:
+      type: object
+      required: [id, name, contentType, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        contentType:
+          type: string
+        status:
+          type: string
+          enum: [draft, active, archived]
+        thumbnail:
+          type: ["string", "null"]
+        sceneCount:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ProjectInput:
+      type: object
+      required: [name, contentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        contentType:
+          type: string
+
+    ProjectUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, active, archived]
+        contentType:
+          type: string
+
+    ProjectStats:
+      type: object
+      required: [total, byStatus, byContentType, recentActivity, totalExports, totalBulkJobs]
+      properties:
+        total:
+          type: integer
+        byStatus:
+          type: object
+          properties:
+            draft:
+              type: integer
+            active:
+              type: integer
+            archived:
+              type: integer
+          required: [draft, active, archived]
+        byContentType:
+          type: array
+          items:
+            type: object
+            required: [contentType, count]
+            properties:
+              contentType:
+                type: string
+              count:
+                type: integer
+        recentActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+        totalExports:
+          type: integer
+        totalBulkJobs:
+          type: integer
+
+    ProjectConfiguration:
+      type: object
+      required: [id, projectId, config, updatedAt]
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        config:
+          $ref: "#/components/schemas/ContentConfig"
+        updatedAt:
+          type: string
+
+    ProjectConfigurationInput:
+      type: object
+      required: [config]
+      properties:
+        config:
+          $ref: "#/components/schemas/ContentConfig"
+
+    ContentConfig:
+      type: object
+      properties:
+        branding:
+          type: object
+          properties:
+            logo:
+              type: ["string", "null"]
+            watermark:
+              type: ["string", "null"]
+            primaryColor:
+              type: string
+            secondaryColor:
+              type: string
+            tagline:
+              type: ["string", "null"]
+            website:
+              type: ["string", "null"]
+        theme:
+          type: string
+          enum: [luxury, modern, corporate, minimal, energetic, kids, cinematic, dark, neon]
+        voice:
+          type: object
+          properties:
+            provider:
+              type: string
+              enum: [browser, openai, elevenlabs, google, azure, polly]
+            voice:
+              type: string
+            language:
+              type: string
+            speed:
+              type: number
+            pitch:
+              type: number
+        animation:
+          type: string
+          enum: [luxury, modern, corporate, minimal, energetic, kids, cinematic, dark, neon]
+        camera:
+          type: string
+          enum: [push_in, push_out, pan_left, pan_right, orbit, parallax, zoom, shake]
+        music:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            mood:
+              type: string
+            volume:
+              type: number
+        subtitle:
+          type: object
+          properties:
+            mode:
+              type: string
+              enum: [sentence, word_highlight, karaoke, animated]
+            enabled:
+              type: boolean
+        background:
+          type: string
+          enum: [static, gradient, particles, video, animated_shapes, glassmorphism, 3d_space]
+        duration:
+          type: number
+        aspectRatio:
+          type: string
+          enum: ["9:16", "16:9", "1:1", "4:5"]
+
+    Scene:
+      type: object
+      required: [id, projectId, order, text, voiceScript, duration]
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        order:
+          type: integer
+        text:
+          type: string
+        voiceScript:
+          type: string
+        cta:
+          type: ["string", "null"]
+        duration:
+          type: number
+        animationPreset:
+          type: ["string", "null"]
+        backgroundType:
+          type: ["string", "null"]
+        subtitleMode:
+          type: ["string", "null"]
+
+    SceneGenerateInput:
+      type: object
+      required: [count]
+      properties:
+        count:
+          type: integer
+          minimum: 1
+          maximum: 20
+        topic:
+          type: string
+        style:
+          type: string
+
+    Plugin:
+      type: object
+      required: [slug, name, category, description, previewImage]
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        previewImage:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        isPopular:
+          type: boolean
+
+    PluginCategory:
+      type: object
+      required: [category, plugins]
+      properties:
+        category:
+          type: string
+        plugins:
+          type: array
+          items:
+            $ref: "#/components/schemas/Plugin"
+
+    BulkJob:
+      type: object
+      required: [id, name, projectId, status, totalItems, completedItems, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        projectId:
+          type: integer
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        totalItems:
+          type: integer
+        completedItems:
+          type: integer
+        failedItems:
+          type: integer
+        inputSource:
+          type: string
+          enum: [csv, json, manual]
+        createdAt:
+          type: string
+        updatedAt:
+          type: ["string", "null"]
+        completedAt:
+          type: ["string", "null"]
+
+    BulkJobInput:
+      type: object
+      required: [name, projectId, items]
+      properties:
+        name:
+          type: string
+        projectId:
+          type: integer
+        inputSource:
+          type: string
+          enum: [csv, json, manual]
+        items:
+          type: array
+          items:
+            type: object
+            required: [text]
+            properties:
+              text:
+                type: string
+              topic:
+                type: string
+
+    Export:
+      type: object
+      required: [id, projectId, format, platform, status, createdAt]
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        format:
+          type: string
+          enum: [mp4, webm, gif]
+        platform:
+          type: string
+          enum: [instagram_reels, youtube_shorts, tiktok, facebook_reels, landscape, square]
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        fileUrl:
+          type: ["string", "null"]
+        fileSize:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+        completedAt:
+          type: ["string", "null"]
+
+    ExportInput:
+      type: object
+      required: [projectId, format, platform]
+      properties:
+        projectId:
+          type: integer
+        format:
+          type: string
+          enum: [mp4, webm, gif]
+        platform:
+          type: string
+          enum: [instagram_reels, youtube_shorts, tiktok, facebook_reels, landscape, square]
