@@ -22,6 +22,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import { ScenePreview } from "@/components/scene-preview";
 import type { ContentConfig } from "@workspace/api-client-react/src/generated/api.schemas";
 
 export default function ProjectDetail() {
@@ -45,9 +46,10 @@ export default function ProjectDetail() {
   const generateScenes = useGenerateScenes();
   const createExport = useCreateExport();
 
-  // Local state for configuration to enable optimistic UI and debounced saves
   const [localConfig, setLocalConfig] = useState<ContentConfig | null>(null);
   const initializedRef = useRef<number | null>(null);
+  const [selectedSceneId, setSelectedSceneId] = useState<number | null>(null);
+  const [playingSceneId, setPlayingSceneId] = useState<number | null>(null);
 
   useEffect(() => {
     if (configRecord && initializedRef.current !== projectId) {
@@ -56,16 +58,19 @@ export default function ProjectDetail() {
     }
   }, [configRecord, projectId]);
 
-  // Debounced save
+  useEffect(() => {
+    if (scenes && scenes.length > 0 && selectedSceneId === null) {
+      setSelectedSceneId(scenes[0].id);
+    }
+  }, [scenes, selectedSceneId]);
+
   const mutateFnRef = useRef(updateConfig.mutate);
   mutateFnRef.current = updateConfig.mutate;
 
   const saveConfig = useCallback((newConfig: ContentConfig) => {
     mutateFnRef.current(
       { id: projectId, data: { config: newConfig } },
-      {
-        onError: () => toast({ variant: "destructive", title: "Failed to save configuration" })
-      }
+      { onError: () => toast({ variant: "destructive", title: "Failed to save configuration" }) }
     );
   }, [projectId, toast]);
 
@@ -82,6 +87,8 @@ export default function ProjectDetail() {
       {
         onSuccess: () => {
           toast({ title: "Scenes generated successfully" });
+          setSelectedSceneId(null);
+          setPlayingSceneId(null);
           refetchScenes();
         },
         onError: () => toast({ variant: "destructive", title: "Generation failed" })
@@ -98,6 +105,12 @@ export default function ProjectDetail() {
       }
     );
   };
+
+  const handlePlayToggle = (sceneId: number) => {
+    setPlayingSceneId(prev => (prev === sceneId ? null : sceneId));
+  };
+
+  const selectedScene = scenes?.find(s => s.id === selectedSceneId) ?? scenes?.[0] ?? null;
 
   if (projectLoading || configLoading) {
     return <div className="p-8"><Skeleton className="h-64 w-full rounded-xl" /></div>;
@@ -131,9 +144,6 @@ export default function ProjectDetail() {
           </div>
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <Button variant="outline" className="gap-2" onClick={() => window.open(`/api/projects/${projectId}/preview`, '_blank')}>
-            <Video className="w-4 h-4" /> Preview
-          </Button>
           <Button className="gap-2 shadow-[0_0_15px_rgba(153,51,255,0.2)]" onClick={handleExport} disabled={createExport.isPending}>
             {createExport.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             Render Video
@@ -221,7 +231,7 @@ export default function ProjectDetail() {
                 <div className="space-y-3">
                   <Label>Voice Provider</Label>
                   <Select 
-                    value={localConfig.voice?.provider || "elevenlabs"} 
+                    value={localConfig.voice?.provider || "browser"} 
                     onValueChange={(val: any) => handleConfigChange(c => ({ ...c, voice: { ...c.voice, provider: val } }))}
                   >
                     <SelectTrigger className="bg-background">
@@ -266,10 +276,10 @@ export default function ProjectDetail() {
                       <div className="space-y-3">
                         <div className="flex justify-between">
                           <Label className="text-xs text-muted-foreground">Volume</Label>
-                          <span className="text-xs font-mono">{localConfig.music?.volume || 0.2}</span>
+                          <span className="text-xs font-mono">{localConfig.music?.volume ?? 0.3}</span>
                         </div>
                         <Slider 
-                          value={[localConfig.music?.volume || 0.2]} 
+                          value={[localConfig.music?.volume ?? 0.3]} 
                           max={1} 
                           step={0.05}
                           onValueChange={([val]) => handleConfigChange(c => ({ ...c, music: { ...c.music, volume: val } }))}
@@ -302,7 +312,7 @@ export default function ProjectDetail() {
                 <div className="space-y-3">
                   <Label>Animation Preset</Label>
                   <Select 
-                    value={localConfig.animation || "cinematic"} 
+                    value={localConfig.animation || "modern"} 
                     onValueChange={(val: any) => handleConfigChange(c => ({ ...c, animation: val }))}
                   >
                     <SelectTrigger className="bg-background">
@@ -330,7 +340,7 @@ export default function ProjectDetail() {
                   <div className="space-y-3 pt-2">
                     <Label>Subtitle Style</Label>
                     <Select 
-                      value={localConfig.subtitle?.mode || "word_highlight"} 
+                      value={localConfig.subtitle?.mode || "sentence"} 
                       onValueChange={(val: any) => handleConfigChange(c => ({ ...c, subtitle: { ...c.subtitle, mode: val } }))}
                     >
                       <SelectTrigger className="bg-background">
@@ -360,6 +370,42 @@ export default function ProjectDetail() {
               </TabsContent>
             </div>
           </Tabs>
+
+          {/* Live Preview Panel */}
+          {selectedScene && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Video className="w-4 h-4 text-primary" /> Live Preview
+                </h3>
+                <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">
+                  {localConfig.aspectRatio ?? "9:16"} · {localConfig.theme ?? "modern"}
+                </span>
+              </div>
+              <div className="bg-card rounded-xl border border-border/50 p-4 flex flex-col items-center gap-3">
+                <ScenePreview
+                  scene={selectedScene}
+                  config={localConfig}
+                  isPlaying={playingSceneId === selectedScene.id}
+                  onPlayToggle={() => handlePlayToggle(selectedScene.id)}
+                />
+                <p className="text-[10px] text-muted-foreground text-center">
+                  {playingSceneId === selectedScene.id ? "Playing — click to pause" : "Click preview to play animation"}
+                </p>
+                <div className="flex gap-2 flex-wrap justify-center">
+                  {[
+                    { label: localConfig.background?.replace("_", " ") ?? "gradient", icon: "BG" },
+                    { label: localConfig.camera?.replace("_", " ") ?? "push in", icon: "CAM" },
+                    { label: localConfig.subtitle?.mode?.replace("_", " ") ?? "sentence", icon: "SUB" },
+                  ].map(tag => (
+                    <span key={tag.icon} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-accent/30 text-muted-foreground border border-border/30">
+                      {tag.icon}: {tag.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column: Scenes */}
@@ -374,32 +420,62 @@ export default function ProjectDetail() {
             </Button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {scenesLoading ? (
-              [1,2,3].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)
+              [1,2,3].map(i => <Skeleton key={i} className="h-36 w-full rounded-xl" />)
             ) : scenes?.length ? (
-              scenes.map((scene, i) => (
-                <Card key={scene.id} className="bg-card/50 border-border/50 overflow-hidden relative group">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors"></div>
-                  <CardContent className="p-0 flex">
-                    <div className="w-24 md:w-32 bg-accent/30 flex flex-col items-center justify-center border-r border-border/50 p-2 shrink-0">
-                      <span className="text-xs font-mono text-muted-foreground mb-1">SCENE</span>
-                      <span className="text-2xl font-bold text-foreground/50">{String(scene.order).padStart(2, '0')}</span>
-                      <span className="text-[10px] mt-2 px-1.5 py-0.5 bg-background rounded-sm text-muted-foreground border">{scene.duration}s</span>
-                    </div>
-                    <div className="p-4 md:p-5 flex-1 space-y-3 min-w-0">
-                      <div>
-                        <Label className="text-xs text-muted-foreground mb-1 block">Visual Prompt</Label>
-                        <p className="text-sm font-medium text-foreground">{scene.text}</p>
+              scenes.map((scene) => {
+                const isSelected = selectedSceneId === scene.id;
+                const isPlaying = playingSceneId === scene.id;
+                return (
+                  <Card
+                    key={scene.id}
+                    className={`overflow-hidden relative group cursor-pointer transition-all duration-200 ${
+                      isSelected
+                        ? "bg-card border-primary/40 shadow-[0_0_20px_rgba(124,58,237,0.12)]"
+                        : "bg-card/50 border-border/50 hover:border-border hover:bg-card/80"
+                    }`}
+                    onClick={() => setSelectedSceneId(scene.id)}
+                  >
+                    <div className={`absolute left-0 top-0 bottom-0 w-1 transition-colors ${isSelected ? "bg-primary" : "bg-primary/20 group-hover:bg-primary/40"}`} />
+                    <CardContent className="p-0 flex">
+                      {/* Mini preview thumbnail */}
+                      <div className="shrink-0 p-3 pl-4 flex items-center">
+                        <div
+                          className="relative overflow-hidden rounded-lg"
+                          style={{ width: "54px", height: "96px" }}
+                          onClick={(e) => { e.stopPropagation(); setSelectedSceneId(scene.id); handlePlayToggle(scene.id); }}
+                        >
+                          <ScenePreview
+                            scene={scene}
+                            config={localConfig}
+                            isPlaying={isPlaying}
+                            onPlayToggle={() => { setSelectedSceneId(scene.id); handlePlayToggle(scene.id); }}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label className="text-xs text-muted-foreground mb-1 block">Voiceover Script</Label>
-                        <p className="text-sm text-muted-foreground italic border-l-2 border-primary/30 pl-3 py-1 bg-accent/10 rounded-r-md">"{scene.voiceScript}"</p>
+
+                      {/* Scene details */}
+                      <div className="p-4 flex-1 space-y-2 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono text-muted-foreground">SCENE {String(scene.order).padStart(2, '0')}</span>
+                          <span className="text-[10px] px-1.5 py-0.5 bg-background rounded-sm text-muted-foreground border border-border/50 font-mono">{scene.duration?.toFixed(1)}s</span>
+                          {isSelected && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-medium">SELECTED</span>}
+                        </div>
+                        <p className="text-sm font-semibold text-foreground leading-snug">{scene.text}</p>
+                        <p className="text-xs text-muted-foreground italic border-l-2 border-primary/20 pl-2 leading-snug">
+                          "{scene.voiceScript.length > 80 ? scene.voiceScript.slice(0, 77) + "…" : scene.voiceScript}"
+                        </p>
+                        {scene.cta && (
+                          <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-medium">
+                            CTA: {scene.cta}
+                          </span>
+                        )}
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+                    </CardContent>
+                  </Card>
+                );
+              })
             ) : (
               <Card className="border-dashed bg-card/30">
                 <CardContent className="p-16 text-center flex flex-col items-center">

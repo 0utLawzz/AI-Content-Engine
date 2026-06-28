@@ -1,0 +1,303 @@
+# AI CONTENT ENGINE — PHASE 2
+
+Excellent foundation.
+
+Do NOT rewrite the existing architecture.
+
+Extend it.
+
+Treat the current project as the permanent core.
+
+All new features must be added as plugins or services.
+
+---
+
+## PRIORITY 1
+
+Build an AI Orchestrator.
+
+Purpose:
+
+Generate complete content packages using AI providers.
+
+Supported providers:
+
+OpenAI
+
+Gemini
+
+Claude
+
+Future providers
+
+The renderer must never depend directly on any AI provider.
+
+Only the orchestrator communicates with AI.
+
+---
+
+## PRIORITY 2
+
+Prompt Templates
+
+Every content plugin should own its own prompts.
+
+Example
+
+plugins/
+
+quotes/
+
+prompt.ts
+
+story/
+
+prompt.ts
+
+business/
+
+prompt.ts
+
+psychology/
+
+prompt.ts
+
+No hardcoded prompts.
+
+---
+
+## PRIORITY 3
+
+Content Pipeline
+
+User enters
+
+Topic
+
+↓
+
+AI generates content
+
+↓
+
+Plugin converts content to scenes
+
+↓
+
+Timeline engine
+
+↓
+
+Voice script
+
+↓
+
+Animation plan
+
+↓
+
+Subtitle plan
+
+↓
+
+Renderer
+
+↓
+
+Export
+
+Everything should be automatic.
+
+---
+
+## PRIORITY 4
+
+Theme Marketplace
+
+Themes should become installable packages.
+
+Example
+
+Luxury Black
+
+Glass
+
+Cyberpunk
+
+Minimal White
+
+Kids Story
+
+Pixar Style
+
+Anime
+
+Corporate
+
+Changing a theme should never require changing renderer code.
+
+---
+
+## PRIORITY 5
+
+Animation Presets
+
+Instead of hardcoded animations.
+
+Create reusable presets.
+
+Luxury
+
+Energetic
+
+Corporate
+
+Kids
+
+Elegant
+
+Minimal
+
+Dynamic
+
+Each preset defines
+
+Text animation
+
+Scene transition
+
+Camera movement
+
+Particle behavior
+
+Timing
+
+---
+
+## PRIORITY 6
+
+AI Thumbnail Generator
+
+Every exported video automatically generates
+
+Thumbnail layout
+
+Headline placement
+
+Safe zones
+
+Brand logo
+
+CTA
+
+Color palette
+
+---
+
+## PRIORITY 7
+
+Voice Synchronization
+
+Voice drives animation.
+
+Animation should wait for narration.
+
+No scene should end before narration finishes.
+
+Timeline adapts automatically.
+
+---
+
+## PRIORITY 8
+
+Plugin Marketplace
+
+Every content type is a plugin.
+
+Future plugins should be installable.
+
+Examples
+
+History
+
+Science
+
+Finance
+
+Religion
+
+Kids
+
+Quotes
+
+News
+
+Education
+
+Language Learning
+
+No renderer modifications.
+
+---
+
+## PRIORITY 9
+
+Bulk Automation
+
+Input
+
+CSV
+
+Google Sheets
+
+JSON
+
+Database
+
+Generate
+
+Videos
+
+Captions
+
+Titles
+
+Descriptions
+
+Hashtags
+
+Thumbnails
+
+Automatically.
+
+---
+
+## PRIORITY 10
+
+Future AI Agents
+
+Prepare interfaces for
+
+Script Agent
+
+Design Agent
+
+Voice Agent
+
+SEO Agent
+
+Thumbnail Agent
+
+Publishing Agent
+
+Scheduler Agent
+
+Analytics Agent
+
+These agents should communicate through interfaces rather than directly.
+
+---
+
+## GOAL
+
+The project should evolve into an extensible AI-powered content creation platform capable of producing thousands of branded short-form videos with minimal user input while maintaining clean architecture and modular design.

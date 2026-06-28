@@ -1,0 +1,1 @@
+- [AI Content Engine architecture](ai-content-engine.md) — contract-first monorepo; openapi.yaml is always edited first, codegen runs after; never edit generated files.
