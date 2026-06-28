@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { spawn, execSync } from "child_process";
 import { db } from "@workspace/db";
 import { exportsTable, scenesTable, configurationsTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
@@ -7,6 +7,18 @@ import fs from "fs";
 import os from "os";
 
 export const EXPORTS_DIR = path.join(process.cwd(), "exports");
+
+// Resolve ffmpeg absolute path at startup — Node spawn needs it explicit in Replit's PATH-isolated env
+let FFMPEG_PATH: string;
+try {
+  FFMPEG_PATH = execSync("which ffmpeg", { encoding: "utf8" }).trim();
+  if (!FFMPEG_PATH) throw new Error("empty path");
+  console.log("[renderer] FFmpeg path resolved:", FFMPEG_PATH);
+} catch {
+  throw new Error(
+    "FFmpeg not found. Cannot start render service. Run: nix-env -iA nixpkgs.ffmpeg"
+  );
+}
 
 export const renderLogs = new Map<number, string[]>();
 
@@ -86,7 +98,7 @@ function wrapText(text: string, maxChars: number): string[] {
 function runFFmpeg(args: string[], exportId: number): Promise<void> {
   return new Promise((resolve, reject) => {
     addLog(exportId, `ffmpeg ${args.filter(a => !a.includes("drawtext")).slice(0, 8).join(" ")} ...`);
-    const proc = spawn("ffmpeg", ["-y", ...args]);
+    const proc = spawn(FFMPEG_PATH, ["-y", ...args]);
     let stderrBuf = "";
     proc.stderr.on("data", (d: Buffer) => {
       stderrBuf += d.toString();
